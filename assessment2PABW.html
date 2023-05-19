@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Brazil public data</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+</head>
+<body>
+    <h1>Data Table</h1>
+    <table id="apiTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <h1>Form</h1>
+    <button onclick="createForm()">Create Form</button>
+    <div id="formContainer"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#apiTable').DataTable({
+                ajax: {
+                    url: 'https://brasilapi.com.br/api/feriados/v1/2024',
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: 'date' },
+                    { data: 'name' },
+                    { data: 'type' }
+                ]
+            });
+        });
+
+        function createForm() {
+            var formContainer = document.getElementById('formContainer');
+            var tableBody = document.getElementById('apiTable').getElementsByTagName('tbody')[0];
+            formContainer.innerHTML = '';
+
+            var form = document.createElement('form');
+
+            var dateLabel = document.createElement('label');
+            dateLabel.textContent = 'Date';
+
+            var dateInput = document.createElement('input');
+            dateInput.type = 'text';
+            dateInput.name = 'date';
+
+            var nameLabel = document.createElement('label');
+            nameLabel.textContent = 'Name';
+
+            var nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.name = 'name';
+
+            var typeLabel = document.createElement('label');
+            typeLabel.textContent = 'Type';
+
+            var typeInput = document.createElement('input');
+            typeInput.type = 'text';
+            typeInput.name = 'type';
+
+            var addButton = document.createElement('button');
+            addButton.textContent = 'Add';
+            addButton.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                var rowData = {
+                    date: dateInput.value,
+                    name: nameInput.value,
+                    type: typeInput.value
+                };
+
+                var row = tableBody.insertRow();
+                var dateCell = row.insertCell();
+                var nameCell = row.insertCell();
+                var typeCell = row.insertCell();
+                dateCell.textContent = rowData.date;
+                nameCell.textContent = rowData.name;
+                typeCell.textContent = rowData.type;
+
+                // Reset form inputs
+                dateInput.value = '';
+                nameInput.value = '';
+                typeInput.value = '';
+            });
+
+            form.appendChild(dateLabel);
+            form.appendChild(dateInput);
+            form.appendChild(document.createElement('br'));
+            form.appendChild(nameLabel);
+            form.appendChild(nameInput);
+            form.appendChild(document.createElement('br'));
+            form.appendChild(typeLabel);
+            form.appendChild(typeInput);
+            form.appendChild(document.createElement('br'));
+            form.appendChild(addButton);
+
+            formContainer.appendChild(form);
+        }
+    </script>
+</body>
+</html>
